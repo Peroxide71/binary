@@ -1,5 +1,6 @@
 package com.binary.tradings.util;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.binary.tradings.model.Deal;
@@ -33,17 +34,15 @@ import java.util.Map;
  */
 public class NetworkRequestHelper {
     private static NetworkRequestHelper instance;
-    private static  MainActivity mainActivity;
     private static final int INITIAL_ITEM = 0;
 
     private NetworkRequestHelper() {
 
     }
 
-    public static NetworkRequestHelper getInstane(MainActivity mActivity){
+    public static NetworkRequestHelper getInstane(){
         if(instance == null){
             instance = new NetworkRequestHelper();
-            mainActivity = mActivity;
         }
         return instance;
     }
@@ -55,7 +54,7 @@ public class NetworkRequestHelper {
     private final String WHERE_AND_START_DATE_CLAUSE = "%22%20and%20startDate%20%3D%20%22";
     private final String WHERE_END_DATE_CLAUSE = "%22%20and%20endDate%20%3D%20%22";
     private final String END_CLAUSE = "%22&format=json&diagnostics=true&env=http%3A%2F%2Fdatatables.org%2Falltables.env&callback";
-    public void getDealsFromServer(){
+    public void getDealsFromServer(Context context){
 
         try {
             URL url = new URL(DEALS_URL);
@@ -73,7 +72,7 @@ public class NetworkRequestHelper {
             Map<String, List<Deal>> optionsMap = parseOptions(options);
             Log.i("Map", optionsMap.toString());
             //Content got from server, now caching it to local DB.
-            DealsEntry entry = new DealsEntry(mainActivity);
+            DealsEntry entry = new DealsEntry(context);
             entry.open();
             entry.clearTable();
             for(List<Deal> list : optionsMap.values()){
@@ -139,7 +138,7 @@ public class NetworkRequestHelper {
         return result;
     }
 
-    public void getHistoryFromServer(Deal deal){
+    public void getHistoryFromServer(Context context, Deal deal){
         String symbol = YahooMapping.valueOf(deal.getAssetName()).getName();
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String startDateString = df.format(deal.getStartDate());
@@ -181,7 +180,7 @@ public class NetworkRequestHelper {
 
             List<Rate> rateList = parseRates(quote, isIntraday, deal);
             //Content got from server, now caching it to local DB.
-            RatesEntry entry = new RatesEntry(mainActivity);
+            RatesEntry entry = new RatesEntry(context);
             entry.open();
             entry.clearEntries(deal.getDealId());
             for(Rate rate : rateList){

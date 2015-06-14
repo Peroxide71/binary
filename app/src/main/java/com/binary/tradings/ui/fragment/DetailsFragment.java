@@ -174,7 +174,7 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
             String mappingString = YahooMapping.valueOf(deal.getAssetName()).getName();
             Log.i("MappingString", mappingString);
             if(!entry.hasRatesInDB(YahooMapping.valueOf(deal.getAssetName()).getName())){
-                NetworkRequestHelper.getInstane(mActivity).getHistoryFromServer(deal);
+                NetworkRequestHelper.getInstane().getHistoryFromServer(mActivity, deal);
             }
             entry.close();
             return null;

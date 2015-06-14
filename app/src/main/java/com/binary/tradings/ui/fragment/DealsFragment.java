@@ -181,7 +181,7 @@ public class DealsFragment extends ListFragment implements LoaderManager.LoaderC
             DealsEntry entry = new DealsEntry(mActivity);
             entry.open();
             if(!entry.hasDealsInDB() || reload){
-                NetworkRequestHelper.getInstane(mActivity).getDealsFromServer();
+                NetworkRequestHelper.getInstane().getDealsFromServer(mActivity);
                 reload = false;
             }
             entry.close();
